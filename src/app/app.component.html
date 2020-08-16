@@ -1,23 +1,46 @@
-<div *ngIf="globalCases; else loader">
+<!-- <div >
+<ng-template #loader>
+  <mat-spinner class="loader"></mat-spinner>
+</ng-template>
+</div> -->
+<div *ngIf="loader" class="my-display mydisplaynow loader">
+  <img src="../assets/images/ring.gif"/>
+</div>
+<div *ngIf="globalCases">
   India<mat-slide-toggle [(ngModel)]="isChecked" >
     Global
-  </mat-slide-toggle> 
-  
-  
-  
+  </mat-slide-toggle>
+
+
+
   <!-- India data -->
   <div>
     <ng-template #india>
-  
+
       <h3>India Status</h3>
       <div>
-        Total Cases: {{TotalConfirmedIn}} <br>
+
+        <table>
+          <tr>
+            <th>Total Confirmed</th>
+            <th>Currently Active</th>
+            <th>Total Deaths</th>
+            <th>Total Recovered</th>
+          </tr>
+             <tr style="background-color: #ffffff;">
+              <td>{{TotalConfirmedIn}}</td>
+              <td>{{ActiveCasesIn}}</td>
+              <td>{{TotalDeathsIn}}</td>
+              <td>{{TotalRecoveredIn}}</td>
+             </tr>
+          </table>
+        <!-- Total Cases: {{TotalConfirmedIn}} <br>
         Currently Active: {{ActiveCasesIn}} <br>
         TotalDeaths: {{TotalDeathsIn}}<br>
-        TotalRecovered: {{TotalRecoveredIn}}
+        TotalRecovered: {{TotalRecoveredIn}} -->
       </div>
-    
-    
+
+
       <!-- Search -->
       <mat-form-field class="example-form-field">
         <input matInput type="text" placeholder="Search by state" [(ngModel)]=searchByState name="search" >
@@ -27,91 +50,104 @@
       </mat-form-field>
       <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSourceIndia | search: searchByState"  matSort>
-      
+
           <!-- State Column -->
           <ng-container matColumnDef="state">
-            <th mat-header-cell *matHeaderCellDef> State </th>
-            <td mat-cell *matCellDef="let element"> 
-    
+            <th mat-header-cell *matHeaderCellDef style="width: 14% !important;"> State </th>
+            <td mat-cell *matCellDef="let element">
+
          <mat-accordion>
           <mat-expansion-panel hideToggle>
             <mat-expansion-panel-header>
-              <mat-panel-title>
-                {{element?.state}} 
+              <mat-panel-title style="width: 14% !important;">
+                {{element?.state}}
               </mat-panel-title>
             </mat-expansion-panel-header>
             <div *ngFor="let state of states">
               <div *ngIf="element?.state == state">
-                <table style="width:100%;">
+                <table>
                 <tr>
-                  <th >district</th>
+                  <th>district</th>
                   <th>confirmed</th>
                   <th>active</th>
                   <th>deceased</th>
                   <th>recovered</th>
                 </tr>
-                <div *ngFor="let district of districts[state]">
-                   <tr style="width:100%;">   
+                   <tr *ngFor="let district of districts[state]">
                     <td>{{district}}</td>
                     <td>{{districtWiseData[state]?.districtData[district].confirmed}}</td>
                     <td>{{districtWiseData[state]?.districtData[district].active}}</td>
                     <td>{{districtWiseData[state]?.districtData[district].deceased}}</td>
                     <td>{{districtWiseData[state]?.districtData[district].recovered}}</td>
                    </tr>
-                  </div>
                 </table>
                 </div>
               </div>
             </mat-expansion-panel>
           </mat-accordion>
-          
+
         </td>
       </ng-container>
-    
+
           <!-- Active Cases -->
           <ng-container matColumnDef="active">
             <th mat-header-cell *matHeaderCellDef> Active </th>
             <td mat-cell *matCellDef="let element"> {{element?.active}} </td>
           </ng-container>
-      
+
           <!-- Total Confirmed Column -->
           <ng-container matColumnDef="confirmed">
             <th mat-header-cell *matHeaderCellDef> Confirmed </th>
             <td mat-cell *matCellDef="let element"> {{element?.confirmed}} </td>
           </ng-container>
-      
+
           <!-- Total Death Column -->
           <ng-container matColumnDef="deaths">
             <th mat-header-cell *matHeaderCellDef> Deceased </th>
             <td mat-cell *matCellDef="let element"> {{element?.deaths}} </td>
           </ng-container>
-      
+
           <!-- Recovered -->
           <ng-container matColumnDef="recovered">
             <th mat-header-cell *matHeaderCellDef>Recovered </th>
             <td mat-cell *matCellDef="let element"> {{element?.recovered}} </td>
           </ng-container>
-      
+
           <tr mat-header-row *matHeaderRowDef="displayedIndiaColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedIndiaColumns;"></tr>
         </table>
       </div>
     </ng-template>
   </div>
-  
-  
-  
-  
+
+
+
+
     <ng-template [ngIf]="isChecked" [ngIfElse]="india">
-  
+
       <div>
         <h3>Worldwide Status</h3>
-        TotalConfirmed: {{globalCases?.TotalConfirmed}} <br>
+
+        <table>
+          <tr>
+            <th>Total Confirmed</th>
+            <th>Currently Active</th>
+            <th>Total Deaths</th>
+            <th>Total Recovered</th>
+          </tr>
+             <tr style="background-color: #ffffff;">
+              <td>{{globalCases?.TotalConfirmed}}</td>
+              <td>{{globalCases?.TotalConfirmed-globalCases?.TotalDeaths-globalCases?.TotalRecovered}}</td>
+              <td>{{globalCases?.TotalDeaths}}</td>
+              <td>{{globalCases?.TotalRecovered}}</td>
+             </tr>
+          </table>
+        <!-- TotalConfirmed: {{globalCases?.TotalConfirmed}} <br>
         Currently Active: {{globalCases?.TotalConfirmed-globalCases?.TotalDeaths-globalCases?.TotalRecovered}} <br>
         TotalDeaths: {{globalCases?.TotalDeaths}}<br>
-        TotalRecovered: {{globalCases?.TotalRecovered}}
+        TotalRecovered: {{globalCases?.TotalRecovered}} -->
       </div>
-    
+
       <!-- Search -->
     <mat-form-field class="example-form-field">
       <input matInput type="text" placeholder="Search by country" [(ngModel)]=searchByCountry name="search" >
@@ -122,46 +158,44 @@
       <!-- Countrywise -->
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource | search:searchByCountry "  matSort>
-    
+
         <!-- Country Column -->
         <ng-container matColumnDef="Country">
-          <th mat-header-cell *matHeaderCellDef> Country </th>
-          <td mat-cell *matCellDef="let element"> {{element?.Country}} </td> 
+          <th mat-header-cell *matHeaderCellDef style="width: 14%;"> Country </th>
+          <td mat-cell *matCellDef="let element"> {{element?.Country}} </td>
         </ng-container>
-    
+
         <ng-container matColumnDef="ActiveCases">
           <th mat-header-cell *matHeaderCellDef> Active </th>
           <td mat-cell *matCellDef="let element"> {{element?.TotalConfirmed-element?.TotalDeaths-element?.TotalRecovered}} </td>
         </ng-container>
-    
+
         <!-- Confirmed Cases -->
         <ng-container matColumnDef="TotalConfirmed">
           <th mat-header-cell *matHeaderCellDef> Confirmed </th>
           <td mat-cell *matCellDef="let element"> {{element?.TotalConfirmed}} </td>
         </ng-container>
-    
+
         <!-- Deceased -->
         <ng-container matColumnDef="TotalDeaths">
           <th mat-header-cell *matHeaderCellDef> Deceased </th>
           <td mat-cell *matCellDef="let element"> {{element?.TotalDeaths}} </td>
         </ng-container>
-    
+
         <!-- Recovered -->
-        <ng-container matColumnDef="TotalRecovered">                  ">
+        <ng-container matColumnDef="TotalRecovered">
           <th mat-header-cell *matHeaderCellDef> Recovered </th>
           <td mat-cell *matCellDef="let element"> {{element?.TotalRecovered}} </td>
         </ng-container>
-    
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
     </div>
-    
+
     </ng-template>
-  
-  
-  </div>
+
+
+</div>
   <mat-paginator [pageSize]="pageSize" [length]="length" [pageSizeOptions]="pageSizeOptions"  showFirstLastButtons></mat-paginator>
-<ng-template #loader>
-  <mat-spinner style="background:center"></mat-spinner>
-</ng-template>
+
